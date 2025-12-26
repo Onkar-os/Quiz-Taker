@@ -1,6 +1,10 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
 function StartScreen() {
+    const navigate = useNavigate();
+    function openTopics() {
+      navigate("/topics")
+    }
   return (
     <div className="min-h-screen bg-gray-100 px-10 py-6">
 
@@ -47,8 +51,8 @@ function StartScreen() {
 
       {/* Start Button */}
       <div className="text-center mt-10">
-        <button className="bg-blue-600 text-white px-10 py-3 rounded-lg font-semibold hover:bg-blue-700">
-          Start Quiz
+        <button className="bg-blue-600 text-white px-10 py-3 rounded-lg font-semibold hover:bg-blue-700" onClick={openTopics}>
+          Move to Topics
         </button>
       </div>
 
