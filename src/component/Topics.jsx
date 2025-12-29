@@ -1,6 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Topics() {
+  const navigate=useNavigate();
+  function openQuiz(topicId){
+    navigate(`/questioncard/${topicId}`);
+  }
   const topics = [
     { id: 1, name: "JavaScript", questions: 10, time: "10 Min" },
     { id: 2, name: "React JS", questions: 10, time: "10 Min" },
@@ -40,7 +45,7 @@ function Topics() {
             </div>
 
             {/* Start Button */}
-            <button className="bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700">
+            <button className="bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700"  onClick={() => navigate(`/questioncard/${topic.id}`)}>
               Start Quiz
             </button>
           </div>

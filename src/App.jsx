@@ -1,76 +1,68 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import QuestionCard from "./component/QuestionCard";
 import StartScreen from "./component/StartScreen";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Topics from "./component/Topics";
+import Video from "./component/Video";
+
+import { Routes, Route, Link } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            Navbar
-          </a>
+   <>
+
+      {/* NAVBAR */}
+      <nav className="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            Quiz Taker
+          </Link>
+
           <button
-            class="navbar-toggler"
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <Link class="nav-link active" aria-current="page" to="/">
-                  StartScreen
+
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link className="nav-link" to="/">
+                  Start
                 </Link>
               </li>
-              <li class="nav-item">
-                <Link class="nav-link" to="/video">
+
+              <li className="nav-item  text-white">
+                <Link className="nav-link" to="/topics">
+                  Topics
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/video">
                   Video
                 </Link>
               </li>
-               <li class="nav-item">
-                <Link class="nav-link" to="/result">
-                  ResultScreen
-                </Link>
-              </li>
-
             </ul>
-            <form class="d-flex" role="search">
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
           </div>
         </div>
       </nav>
+
+      {/* ROUTES */}
       <Routes>
         <Route path="/" element={<StartScreen />} />
         <Route path="/topics" element={<Topics />} />
-
+        <Route path="/video" element={<Video />} />
+        <Route path="/questioncard/:topicId" element={<QuestionCard />} />
       </Routes>
 
-      <footer>
-        <div className="bg-gray-800 text-white text-center p-4 mt-10">
-          <p>&copy; 2024 Quiz Taker. All rights reserved.</p>
-        </div>
+      {/* FOOTER */}
+      <footer className="bg-gray-800 text-white text-center p-4 mt-10">
+        <p>&copy; 2024 Quiz Taker. All rights reserved.</p>
       </footer>
-    </>
+      </>
   );
 }
 
