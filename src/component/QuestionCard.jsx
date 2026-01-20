@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import quizData from "../data/data.js";
 
 const topicMap = {
@@ -12,9 +11,8 @@ const topicMap = {
 
 const TOTAL_TIME = 10 * 60; // 10 minutes
 
-function QuestionCard() {
-  const { topicId } = useParams();
-  const topicKey = topicMap[topicId];
+function QuestionCard({ topicId, onClose }) {
+  const topicKey = topicMap[Number(topicId)];
   const questions = quizData[topicKey];
 
   const [index, setIndex] = useState(0);
@@ -41,24 +39,14 @@ function QuestionCard() {
     return () => clearInterval(timer);
   }, [showResult]);
 
-  /* -------- Pause timer when tab inactive -------- */
-  useEffect(() => {
-    const handleVisibility = () => {
-      if (document.hidden) {
-        setShowResult((prev) => prev);
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () =>
-      document.removeEventListener("visibilitychange", handleVisibility);
-  }, []);
-
   if (!questions) {
-    return <h2 className="text-center mt-10">Quiz Not Found</h2>;
+    return (
+      <div className="p-6 text-center text-red-600 font-semibold">
+        Quiz Not Found
+      </div>
+    );
   }
 
-  /* ---------------- HANDLERS ---------------- */
   const handleNext = () => {
     if (selected === questions[index].correctAnswer) {
       setScore(score + 1);
@@ -82,27 +70,25 @@ function QuestionCard() {
   /* ---------------- RESULT SCREEN ---------------- */
   if (showResult) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">
-            {topicKey} Quiz Result
-          </h2>
+      <div className="p-6 text-center">
+        <h2 className="text-xl font-bold text-blue-600 mb-4">
+          {topicKey} Quiz Result
+        </h2>
 
-          <p className="text-lg mb-2">
-            Score: <strong>{score}</strong> / {questions.length}
-          </p>
+        <p className="mb-2">
+          Score: <strong>{score}</strong> / {questions.length}
+        </p>
 
-          <p className="text-gray-600 mb-4">
-            Time Taken: {formatTime(TOTAL_TIME - timeLeft)}
-          </p>
+        <p className="mb-4">
+          Time Taken: {formatTime(TOTAL_TIME - timeLeft)}
+        </p>
 
-          <button
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg"
-            onClick={() => window.location.reload()}
-          >
-            Restart Quiz
-          </button>
-        </div>
+        <button
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg"
+          onClick={onClose}
+        >
+          Close Quiz
+        </button>
       </div>
     );
   }
@@ -111,52 +97,48 @@ function QuestionCard() {
 
   /* ---------------- QUIZ UI ---------------- */
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xl">
-
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-blue-600">
-            {topicKey} Quiz
-          </h2>
-          <span className="text-red-600 font-semibold">
-            ⏱ {formatTime(timeLeft)}
-          </span>
-        </div>
-
-        <p className="text-gray-600 mb-2">
-          Question {index + 1} of {questions.length}
-        </p>
-
-        <h3 className="text-lg font-semibold mb-4">
-          {currentQuestion.question}
-        </h3>
-
-        <div className="space-y-3">
-          {currentQuestion.options.map((option, i) => (
-            <button
-              key={i}
-              onClick={() => setSelected(option)}
-              className={`w-full border rounded-lg py-2
-                ${
-                  selected === option
-                    ? "bg-blue-200 border-blue-500"
-                    : "hover:bg-blue-100"
-                }`}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-
-        <button
-          className="mt-6 bg-blue-600 text-white w-full py-2 rounded-lg disabled:bg-gray-400"
-          onClick={handleNext}
-          disabled={!selected}
-        >
-          {index === questions.length - 1 ? "Submit Quiz" : "Next"}
-        </button>
-
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="font-bold text-blue-600">
+          {topicKey} Quiz
+        </h2>
+        <span className="text-red-600 font-semibold">
+          ⏱ {formatTime(timeLeft)}
+        </span>
       </div>
+
+      <p className="text-gray-600 mb-2">
+        Question {index + 1} of {questions.length}
+      </p>
+
+      <h3 className="font-semibold mb-3">
+        {currentQuestion.question}
+      </h3>
+
+      <div className="space-y-2">
+        {currentQuestion.options.map((option, i) => (
+          <button
+            key={i}
+            onClick={() => setSelected(option)}
+            className={`w-full border rounded-lg py-2
+              ${
+                selected === option
+                  ? "bg-blue-200 border-blue-500"
+                  : "hover:bg-blue-100"
+              }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+
+      <button
+        onClick={handleNext}
+        disabled={!selected}
+        className="mt-4 bg-blue-600 text-white w-full py-2 rounded-lg disabled:bg-gray-400"
+      >
+        {index === questions.length - 1 ? "Submit Quiz" : "Next"}
+      </button>
     </div>
   );
 }
